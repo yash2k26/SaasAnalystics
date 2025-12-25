@@ -12,3 +12,57 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User{
+  id          String      @id @default(cuid())
+  name        String    
+  email       String      @unique
+  password    String
+  role        Role        @default(USER)
+
+  workspace   Workspace[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+}
+
+model Workspace {
+  id        String        @id @default(cuid())
+  name      String   
+
+
+  ownerId   String
+  owner     User          @relation(fields: [ownerId], references: [id])
+
+  events    AnalyticsEvent[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+
+}
+
+model AnalyticsEvent {
+  id              String      @id @default(cuid())
+  eventName       Events
+  value           Int?
+  metadata        Json
+
+  workspaceId     String
+  workspace       Workspace   @relation(fields: [workspaceId], references: [id])
+
+  createdAt       DateTime    @default(now())
+}
+
+
+enum Role{
+  USER
+  ADMIN
+}
+
+enum Events{
+  page_view
+  user_signup
+  button_click
+  revenue
+}
