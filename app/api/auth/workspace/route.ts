@@ -2,17 +2,19 @@ import { GetUserFromToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function POST(req:Request){
-    const user = GetUserFromToken(req)
+export async function POST(req: Request) {
+    // const user = GetUserFromToken(req)
+    const user = { userid: "dev-user" }
 
-    if(!user){
+
+    if (!user) {
         return NextResponse.json(
             {
-                message : "User doesn't exist ! ",
-                success : false
+                message: "User doesn't exist ! ",
+                success: false
             },
             {
-                status : 400
+                status: 400
             }
         )
     }
@@ -20,9 +22,9 @@ export async function POST(req:Request){
     const { name } = await req.json
 
     const addWorkspace = await prisma.workspace.create({
-        data : {
+        data: {
             name,
-            ownerId : user.userid as string
+            ownerId: user.userid as string
         }
     })
 
@@ -35,14 +37,14 @@ export async function POST(req:Request){
         { status: 201 }
     )
 
-}  
+}
 
 
-export async function GET(req : Request){
+export async function GET(req: Request) {
     const user = GetUserFromToken(req)
 
-    if(!user){
-            return NextResponse.json(
+    if (!user) {
+        return NextResponse.json(
             {
                 success: false,
                 message: "User doesn't exists",
@@ -51,35 +53,35 @@ export async function GET(req : Request){
         )
     }
 
-    try {       
+    try {
         const GetWorkspace = prisma.workspace.findMany({
-            where : {
-                ownerId : user.userid
+            where: {
+                ownerId: user.userid
             },
-            orderBy : {
-                createdAt : "desc"
+            orderBy: {
+                createdAt: "desc"
             }
         })
 
 
         return NextResponse.json(
             {
-                success : true,
-                message : "Workspace provided",
-                data : GetWorkspace
+                success: true,
+                message: "Workspace provided",
+                data: GetWorkspace
             },
             {
-            status: 400  
+                status: 400
             }
         )
     } catch (error) {
         return NextResponse.json(
             {
-                success : false,
-                message : error,
+                success: false,
+                message: error,
             },
             {
-                status:400
+                status: 400
             }
         )
     }

@@ -8,7 +8,7 @@ export default function Topbar() {
   const {theme } = useTheme()
   return (
     <div className='flex  justify-between items-center   shadow-white px-6 h-full'>
-       <p>Dashboard</p>
+
        
        <Customselector/>
 

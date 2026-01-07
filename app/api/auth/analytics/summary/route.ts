@@ -4,8 +4,8 @@ import { NextResponse } from "next/server"
 
 export async function GET(req : Request) {
     
-    const user = GetUserFromToken(req)
-
+    const user = { userId: "dev-user" }
+    console.log("u entered here")
     if(!user){
         return NextResponse.json(
             {
@@ -21,12 +21,13 @@ export async function GET(req : Request) {
     
     const {searchParams} = new URL(req.url)
 
-    const workspaceid = searchParams.get("workspaceid")
+    console.log("u entered here 1 ")
+    const workspaceId = searchParams.get("workspaceId")
     const eventName = searchParams.get("eventName")
     const from = searchParams.get("from")
     const to = searchParams.get("to")
-
-    if(!workspaceid){
+console.log("u entered here 2 ")
+    if(!workspaceId){
         return NextResponse.json(
             {
                 success : false ,
@@ -38,9 +39,11 @@ export async function GET(req : Request) {
         )
     }
 
+    console.log('entered 3')
+
     const workspaceCheck = await prisma.workspace.findFirst({
         where:{
-            id : workspaceid,
+            id : workspaceId,
             //@ts-ignore
             ownerId : user.userid
         }
@@ -58,7 +61,7 @@ export async function GET(req : Request) {
             }
         )
     }
-
+        console.log("yaha nhi aaai")
     try {
             
         const datefilter : any = {}
@@ -67,15 +70,15 @@ export async function GET(req : Request) {
         if(to) datefilter.lte = new Date(to)
 
         const baseWhere : any = {
-            workspaceid
+            workspaceId
         }
 
         if(from || to ){
             baseWhere.createdAt = datefilter
         }
-        
+        console.log("no promise")
         const [totalEvent , signupClicks , Pageview , revenue ] = await Promise.all([
-
+            
             prisma.analyticsEvent.count({
                 where: baseWhere
             }),
@@ -103,7 +106,10 @@ export async function GET(req : Request) {
                 }
             })
         ])
-
+        console.log("signup",signupClicks)
+        console.log("pagevisit",Pageview)
+        console.log("totalevent : ",totalEvent)
+        console.log("revenue : ",revenue)
         return NextResponse.json(
                 {
                     success : true ,
@@ -112,7 +118,7 @@ export async function GET(req : Request) {
                         totalEvent , 
                         signupClicks , 
                         Pageview , 
-                        revenue
+                        revenue : revenue._sum.value
                     }
                 },
                 {

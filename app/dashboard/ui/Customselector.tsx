@@ -2,6 +2,7 @@
 import { ArrowDown, ArrowDown01, ChevronDown } from 'lucide-react';
 import React, { useState } from 'react'
 import { useTheme } from '../ThemeProvider';
+import {motion, AnimatePresence } from "motion/react"
 
 const themes = [
   { name: "Rose", hex: "#ec4899" },
@@ -21,14 +22,16 @@ const Customselector = () => {
     const  [open , setopen] = useState(false)
 
   return (
+    <>
     <div className='relative inline-block'>
       <button
       onClick={()=>setopen(open => !open)} 
       className='py-2 flex px-3 cursor-pointer bg-neutral-800 rounded-md text-md '>
         {theme} <ChevronDown className='my-auto m-1 size-4'/>
       </button>
+      <AnimatePresence>
       {
-        open && <div className='bg-neutral-800/40 border overflow-y-auto border-neutral-500/70 p-1 rounded-md z-20 absolute  '>
+        open && <motion.div className='bg-neutral-800/40 border overflow-y-auto border-neutral-500/70 p-1 rounded-md z-20 absolute  '>
             {themes.map((opt)=>(
                 <div
                 onClick={()=>{
@@ -41,9 +44,11 @@ const Customselector = () => {
                     {opt.name}
                 </div>
             ))}
-        </div>
+        </motion.div>
       }
+      </AnimatePresence>
     </div>
+    </>
   )
 }
 

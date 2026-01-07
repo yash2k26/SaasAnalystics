@@ -3,46 +3,48 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { URL } from "url";
 
-export async function POST(req : Request){
-    const user = GetUserFromToken(req)
-    
-    if(!user){
+export async function POST(req: Request) {
+    // const user = GetUserFromToken(req)
+    const user = { userid: "dev-user" }
+
+
+    if (!user) {
         return NextResponse.json(
             {
-                message : "User doesn't exist ! ",
-                success : false
+                message: "User doesn't exist ! ",
+                success: false
             },
             {
-                status : 400
+                status: 400
             }
         )
     }
 
 
-    const {eventName  , value , workspaceId , metadata } = await req.json()
+    const { eventName, value, workspaceId, metadata } = await req.json()
 
     const workspaceExist = await prisma.workspace.findFirst({
-        where:{
-            id : workspaceId,
-            ownerId : user.userid
+        where: {
+            id: workspaceId,
+            ownerId: user.userid
         }
     })
 
-    if(!workspaceExist){
+    if (!workspaceExist) {
         return NextResponse.json(
             {
-                success : false ,
-                message : "Workspace not found ! "
+                success: false,
+                message: "Workspace not found ! "
             },
             {
-                status : 400
+                status: 400
             }
         )
     }
 
-    try {       
+    try {
         const event = await prisma.analyticsEvent.create({
-            data : {
+            data: {
                 eventName,
                 value,
                 workspaceId,
@@ -52,37 +54,39 @@ export async function POST(req : Request){
 
         return NextResponse.json(
             {
-                success : true ,
-                message : "event listed! "
+                success: true,
+                message: "event listed! ",
+                data: event
             },
             {
-                status : 200
+                status: 200
             }
-        )        
+        )
     } catch (error) {
         return NextResponse.json(
             {
-                success : false ,
-                message : "Unauthorized ! "
+                success: false,
+                message: "Unauthorized ! "
             },
             {
-                status : 404
+                status: 404
             }
         )
     }
 }
 
-export async function GET(req:Request) {
-    const user = GetUserFromToken(req)
-    
-    if(!user){
+export async function GET(req: Request) {
+    // const user = GetUserFromToken(req)
+    const user = { userId: "dev-user" }
+
+    if (!user) {
         return NextResponse.json(
             {
-                message : "User doesn't exist ! ",
-                success : false
+                message: "User doesn't exist ! ",
+                success: false
             },
             {
-                status : 400
+                status: 400
             }
         )
     }
@@ -94,80 +98,80 @@ export async function GET(req:Request) {
     const from = searchParams.get("from")
     const to = searchParams.get("to")
 
-    if(!workspaceId){
+    if (!workspaceId) {
         return NextResponse.json(
             {
-                success : false ,
-                message : "Workspace not found ! "
+                success: false,
+                message: "Workspace not found ! "
             },
             {
-                status : 400
+                status: 400
             }
         )
     }
 
     const workspace = await prisma.workspace.findFirst({
-        where : {
-            id : workspaceId,
-            ownerId : user.userid
+        where: {
+            id: workspaceId,
+            ownerId: user.userid
         }
-    }) 
+    })
 
-    if(!workspace){
+    if (!workspace) {
         return NextResponse.json(
             {
-                success : false ,
-                message : "UnAuthorized! "
+                success: false,
+                message: "UnAuthorized! "
             },
             {
-                status : 400
+                status: 400
             }
         )
     }
 
     try {
-        const where : any = {
-            workspaceId 
+        const where: any = {
+            workspaceId
         }
 
-        if(eventName){
+        if (eventName) {
             where.eventName = eventName
         }
 
-        if(from || to ){
+        if (from || to) {
             where.createdAt = {}
 
-            if(from) where.createdAt.gte = new Date(from)
-            if(to) where.createdAt.lte = new Date(to)
+            if (from) where.createdAt.gte = new Date(from)
+            if (to) where.createdAt.lte = new Date(to)
         }
 
 
         const event = await prisma.analyticsEvent.findMany({
             where,
-            orderBy : {
-                createdAt : "desc"
+            orderBy: {
+                createdAt: "desc"
             },
-            take:100
+            take: 100
         })
 
         return NextResponse.json(
-                {
-                    success : true ,
-                    message : "event send ! ",
-                    data : event
-                },
-                {
-                    status : 200
-                }
+            {
+                success: true,
+                message: "event send ! ",
+                data: event
+            },
+            {
+                status: 200
+            }
         )
     } catch (error) {
         return NextResponse.json(
             {
-                success : false ,
-                message : error
+                success: false,
+                message: error
             },
             {
-                status : 400
+                status: 400
             }
         )
     }
