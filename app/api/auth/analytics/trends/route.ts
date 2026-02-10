@@ -62,6 +62,7 @@ export async function GET(req: Request) {
   const map = new Map<string, any>();
 
   grouped.forEach((row) => {
+    
     const day = row.createdAt.toISOString().split("T")[0]; // YYYY-MM-DD
 
     if (!map.has(day)) {
@@ -83,7 +84,7 @@ export async function GET(req: Request) {
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
-  console.log("result : ",result)
+  console.log("result : ", result)
 
   return NextResponse.json(
     {

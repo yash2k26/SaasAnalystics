@@ -5,7 +5,7 @@ import { URL } from "url";
 
 export async function POST(req: Request) {
     // const user = GetUserFromToken(req)
-    const user = { userid: "dev-user" }
+    const user = { userId: "dev-user" }
 
 
     if (!user) {
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     const workspaceExist = await prisma.workspace.findFirst({
         where: {
             id: workspaceId,
-            ownerId: user.userid
+            ownerId:user.userId
         }
     })
 
@@ -113,7 +113,7 @@ export async function GET(req: Request) {
     const workspace = await prisma.workspace.findFirst({
         where: {
             id: workspaceId,
-            ownerId: user.userid
+            ownerId: user.userId
         }
     })
 

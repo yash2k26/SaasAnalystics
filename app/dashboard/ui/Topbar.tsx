@@ -13,7 +13,7 @@ export default function Topbar() {
        <Customselector/>
 
        <button 
-       className='flex rounded-xl bg-[#ec4899] p-1.5 text-md cursor-pointer '
+       className='flex rounded-xl justify-center items-center bg-[#ec4899] px-1.5 py-2 text-md cursor-pointer '
        style={{
           backgroundColor: theme
        }}

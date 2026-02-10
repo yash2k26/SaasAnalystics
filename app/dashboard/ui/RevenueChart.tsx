@@ -123,15 +123,15 @@ import dayjs from "dayjs"
 export default function RevenueChart({
   data,
   datakey
-}:{
-  data: any[]
-  datakey : string
+}: {
+  data: any[] | null
+  datakey: string
 }) {
-    const {theme} = useTheme()
-    console.log(theme)
-    return (
+  const { theme } = useTheme()
+  console.log(theme)
+  return (
     <ResponsiveContainer width="100%" height={220}>
-      <AreaChart data={data}>
+      <AreaChart data={data || []}>
         <defs>
           <linearGradient id="revGradient" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={theme} stopOpacity={0.4} />
@@ -140,12 +140,12 @@ export default function RevenueChart({
         </defs>
 
         <XAxis
-         tickFormatter={(value) => dayjs(value).format("MMM DD")} 
-         interval={"preserveStartEnd"} 
-         dataKey="date"
-         stroke="#666" 
+          tickFormatter={(value) => dayjs(value).format("MMM DD")}
+          interval={"preserveStartEnd"}
+          dataKey="date"
+          stroke="#666"
         />
-        <Tooltip content={<CustomTooltip/>}  />
+        <Tooltip content={<CustomTooltip />} />
 
         <Area
           type="basis"

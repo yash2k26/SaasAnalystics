@@ -12,27 +12,24 @@ const NumberAnimation = ({value,currency}:{
             currency : boolean
         }) => {
 
- const {theme} = useTheme()           
- const MotionValue = useMotionValue(0)
-
- const spring = useSpring(MotionValue,{
-    stiffness:120,
-    damping:20
- })
-
- const displayed = useTransform(spring,(latest)=>{
-       const formatted = Math.floor(latest)
-       
-       return currency ? `$${formatAmount(formatted)}` : `${formatAmount(formatted)}`
+    const motionValue = useMotionValue(0)
+    
+    const spring = useSpring(motionValue, {
+        stiffness:120,
+        damping:20,
     })
 
- useEffect(()=>{
-    const controls = animate(MotionValue,value,{
-        duration:0.2,
-        ease:"easeOut"
-    } )
-    return ()=>controls.stop()
- },[theme])
+    const displayed = useTransform(spring,(latest)=>{
+            const formated = Math.floor(latest)
+            return currency ? `$${formatAmount(formated)}` : `${formatAmount(formated)}`
+    })
+
+    useEffect(()=>{
+        animate(motionValue,value,{
+            duration:0.5,
+            ease:"easeInOut"
+        }) 
+    },[])
 
   return (
     <motion.span>
@@ -45,3 +42,7 @@ const NumberAnimation = ({value,currency}:{
 
 
 export default NumberAnimation
+
+
+
+

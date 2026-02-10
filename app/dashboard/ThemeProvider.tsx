@@ -22,7 +22,8 @@ type ThemeType = {
 }
 
 export default function ThemeProvider({children}:any) {
-    const [theme , setTheme ] = useState<Theme>("Rose")
+    const [theme , setTheme  ] = useState<Theme>("Rose")
+    const [currentPage , setCurrentPage] = useState()
   return (
     
     <ThemeContext.Provider value={{theme,setTheme}}>

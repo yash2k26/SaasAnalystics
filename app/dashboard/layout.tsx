@@ -3,7 +3,7 @@ import Sidebar from './ui/Sidebar'
 import Topbar from './ui/Topbar'
 import ThemeProvider from './ThemeProvider'
 
-export default function page({children}:{children : React.ReactNode}) {
+export default function layout({children}:{children : React.ReactNode}) {
   return (
     <ThemeProvider>
     <div className='grid min-h-screen grid-cols-[235px_1fr] grid-rows-[64px_1fr] bg-black text-white '>
