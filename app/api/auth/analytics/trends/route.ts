@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { AnalyticsTrend } from "@/lib/types";
+import { Events } from "@prisma/client";
 
 export async function GET(req: Request) {
   // temporary dev user
@@ -59,10 +61,10 @@ export async function GET(req: Request) {
   });
 
   // normalize into {date -> counts}
-  const map = new Map<string, any>();
+  const map = new Map<string, AnalyticsTrend>();
 
-  grouped.forEach((row) => {
-    
+  grouped.forEach((row: { eventName: Events; createdAt: Date; _count: { eventName: number } }) => {
+
     const day = row.createdAt.toISOString().split("T")[0]; // YYYY-MM-DD
 
     if (!map.has(day)) {
@@ -76,8 +78,13 @@ export async function GET(req: Request) {
     }
 
     const bucket = map.get(day);
-
-    bucket[row.eventName] = row._count.eventName;
+    if (bucket) {
+      // Use bracket notation to safely assign the count based on event name
+      const key = row.eventName as keyof AnalyticsTrend;
+      if (key in bucket && key !== 'date') {
+        (bucket as any)[key] = row._count.eventName;
+      }
+    }
   });
 
   const result = Array.from(map.values()).sort(
