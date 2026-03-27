@@ -19,9 +19,9 @@ const NumberAnimation = ({value,currency}:{
         damping:20,
     })
 
-    const displayed = useTransform(spring,(latest)=>{
-            const formated = Math.floor(latest)
-            return currency ? `$${formatAmount(formated)}` : `${formatAmount(formated)}`
+    const displayed = useTransform(spring, (latest) => {
+        const formated = Math.floor(latest)
+        return currency ? `$${formatAmount(formated)}` : formatAmount(formated)
     })
 
     useEffect(()=>{
@@ -32,7 +32,7 @@ const NumberAnimation = ({value,currency}:{
     },[])
 
   return (
-    <motion.span>
+    <motion.span suppressHydrationWarning>
       {displayed}
     </motion.span>
   )

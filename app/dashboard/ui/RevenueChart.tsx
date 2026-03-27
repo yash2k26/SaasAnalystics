@@ -122,20 +122,23 @@ import dayjs from "dayjs"
 
 export default function RevenueChart({
   data,
-  datakey
+  datakey,
+  gradientId,
+  currency,
 }: {
   data: any[] | null
   datakey: string
+  gradientId: string
+  currency: boolean
 }) {
   const { theme } = useTheme()
-  console.log(theme)
   return (
-    <ResponsiveContainer width="100%" height={220}>
-      <AreaChart data={data || []}>
+    <ResponsiveContainer width="100%" height={180}>
+      <AreaChart data={data || []} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
         <defs>
-          <linearGradient id="revGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={theme} stopOpacity={0.4} />
-            <stop offset="100%" stopColor={theme} stopOpacity={0} />
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={theme.hex} stopOpacity={0.35} />
+            <stop offset="100%" stopColor={theme.hex} stopOpacity={0} />
           </linearGradient>
         </defs>
 
@@ -143,15 +146,18 @@ export default function RevenueChart({
           tickFormatter={(value) => dayjs(value).format("MMM DD")}
           interval={"preserveStartEnd"}
           dataKey="date"
-          stroke="#666"
+          stroke="#555"
+          tick={{ fontSize: 11, fill: "#888" }}
+          axisLine={false}
+          tickLine={false}
         />
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip content={<CustomTooltip currency={currency} />} />
 
         <Area
           type="basis"
           dataKey={datakey}
-          stroke={theme}
-          fill="url(#revGradient)"
+          stroke={theme.hex}
+          fill={`url(#${gradientId})`}
           strokeWidth={2}
         />
       </AreaChart>

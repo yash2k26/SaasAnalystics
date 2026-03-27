@@ -1,39 +1,22 @@
-import clsx from 'clsx'
-import { Gauge, LucideIcon } from 'lucide-react'
+'use client'
+import { LucideIcon } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import React from 'react'
 
-type Naveitems = {
-    icon : LucideIcon,
-    label : string,
-    
-}
-
-const NavItems = ({
-        icon : Icon,
-        label 
-
-    }:Naveitems) => {
-
-    const nav = [ 
-      { name: 'Dashboard', href: '/dashboard' },
-      { name: 'Analytics', href: '/analytics' },
-      { name: 'Projects', href: '/projects' },
-      { name: 'Team', href: '/team' },
-    ]  
-    
-    const pathname = usePathname()
+const NavItems = ({ icon: Icon, label }: { icon: LucideIcon; label: string }) => {
+  const pathname = usePathname()
+  const href = `/${label.toLowerCase()}`
+  const isActive = pathname === href || (label === 'Dashboard' && pathname === '/dashboard')
 
   return (
-    // const active = pathname == href
-
-    <li 
-        className= 
-            "flex gap-3 cursor-pointer hover:opacity-100 hover:bg-neutral-800 rounded-xl px-3 py-2 "
-              
-             > 
-            <Icon className='size-4 my-auto' /> 
-            <span className=''>{label}</span> 
+    <li
+      className={`flex items-center gap-2.5 cursor-pointer rounded-lg px-3 py-2 transition-colors ${
+        isActive
+          ? 'bg-neutral-800 text-white'
+          : 'text-neutral-400 hover:bg-neutral-800/60 hover:text-white'
+      }`}
+    >
+      <Icon className='size-4 shrink-0' />
+      <span className='text-sm font-medium'>{label}</span>
     </li>
   )
 }

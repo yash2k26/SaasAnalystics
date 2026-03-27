@@ -1,26 +1,29 @@
 "use client"
-import { Gauge, PlusCircle } from 'lucide-react'
-import React from 'react'
+import { PlusCircle } from 'lucide-react'
+import { useState } from 'react'
 import Customselector from './Customselector'
 import { useTheme } from '../ThemeProvider'
+import CreateWorkspaceModal from './CreateWorkspaceModal'
 
 export default function Topbar() {
-  const {theme } = useTheme()
+  const { theme } = useTheme()
+  const [modalOpen, setModalOpen] = useState(false)
+
   return (
-    <div className='flex  justify-between items-center   shadow-white px-6 h-full'>
-
-       
-       <Customselector/>
-
-       <button 
-       className='flex rounded-xl justify-center items-center bg-[#ec4899] px-1.5 py-2 text-md cursor-pointer '
-       style={{
-          backgroundColor: theme
-       }}
-       >
-       
-              Create New <PlusCircle className='m-2 size-5 my-auto '/> 
+    <>
+      <div className='flex justify-between items-center px-6 h-full'>
+        <Customselector />
+        <button
+          onClick={() => setModalOpen(true)}
+          className='flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border cursor-pointer transition-all hover:opacity-90 active:scale-95'
+          style={{ borderColor: `${theme.hex}60`, color: theme.hex, background: `${theme.hex}12` }}
+        >
+          <PlusCircle className='size-4' />
+          Create New
         </button>
-    </div>
+      </div>
+
+      {modalOpen && <CreateWorkspaceModal onClose={() => setModalOpen(false)} />}
+    </>
   )
 }
