@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { AnalyticsTrend } from "@/lib/types";
-import { Events } from "@prisma/client";
 
 export async function GET(req: Request) {
   // temporary dev user
@@ -63,7 +62,9 @@ export async function GET(req: Request) {
   // normalize into {date -> counts}
   const map = new Map<string, AnalyticsTrend>();
 
-  grouped.forEach((row: { eventName: Events; createdAt: Date; _count: { eventName: number } }) => {
+  type TrendEventKey = Exclude<keyof AnalyticsTrend, "date">;
+
+  grouped.forEach((row: { eventName: TrendEventKey; createdAt: Date; _count: { eventName: number } }) => {
 
     const day = row.createdAt.toISOString().split("T")[0]; // YYYY-MM-DD
 
